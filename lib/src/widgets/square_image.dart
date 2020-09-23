@@ -20,7 +20,6 @@ class _SquareImagesState extends State<SquareImages> {
       height: 150.0,
       child: ListView.builder(
         padding: EdgeInsets.only(left: 10.0),
-        
         scrollDirection: Axis.horizontal,
         itemCount: _circularImages.length,
         itemBuilder: (BuildContext context, int index) {

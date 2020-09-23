@@ -1,27 +1,21 @@
 import 'package:flutter/material.dart';
 
 class HorizontalImages extends StatefulWidget {
+  final List<dynamic> animals;
+  HorizontalImages(this.animals);
   @override
   _HorizontalImagesState createState() => _HorizontalImagesState();
 }
 
 class _HorizontalImagesState extends State<HorizontalImages> {
-  List<String> _imageList = [
-    "assets/img/1.jpg",
-    "assets/img/2.jpg",
-    "assets/img/1.jpg",
-    "assets/img/2.jpg",
-    "assets/img/1.jpg",
-    "assets/img/2.jpg",
-  ];
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 250.0,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: _imageList.length,
-        itemBuilder: (BuildContext cotext, int index) {
+        itemCount: widget.animals.length,
+        itemBuilder: (BuildContext context, int index) {
           return Container(
             width: 180.0,
             margin: EdgeInsets.symmetric(horizontal: 10.0),
@@ -30,26 +24,36 @@ class _HorizontalImagesState extends State<HorizontalImages> {
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  Image.asset(
-                    _imageList[index],
+                  Image.network(
+                    widget.animals[index].images[1],
                     fit: BoxFit.cover,
                   ),
                   Positioned(
                     bottom: 14.0,
                     left: 10,
-                    
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Africa Lion",
-                        style: TextStyle(fontSize: 20, color: Colors.white),
-                      ), Text(
-                        "South Africa",
-                        style: TextStyle(color: Colors.orange),
-                      )
-                    ],
-                  ))
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.animals[index].name ?? "",
+                          style: TextStyle(fontSize: 20, color: Colors.white),
+                          maxLines: 2,
+                        ),
+                        Text(
+                          widget.animals[index].sciName ?? "",
+                          style: TextStyle(color: Colors.orange),
+                        )
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    right: 12.0,
+                    child: Container(
+                        width: 20.0,
+                        child: CircleAvatar(
+                          backgroundColor: Colors.red,
+                        )),
+                  )
                 ],
               ),
             ),

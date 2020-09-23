@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'constant.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -21,7 +23,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Aplanet',
       theme: ThemeData(
-        primarySwatch: Colors.green,
+        primarySwatch: customRedColor,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         textTheme: GoogleFonts.ubuntuTextTheme(
           Theme.of(context).textTheme,

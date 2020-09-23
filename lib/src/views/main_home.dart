@@ -1,13 +1,15 @@
+import 'dart:convert';
+
+import 'package:aplanet/src/models/animal.dart';
+import 'package:aplanet/src/services/api.dart';
 import 'package:aplanet/src/widgets/bottom_navigation_bar.dart';
 import 'package:aplanet/src/widgets/category_list.dart';
 import 'package:aplanet/src/widgets/home_bg_color.dart';
 import 'package:aplanet/src/widgets/horizontal_images.dart';
 import 'package:aplanet/src/widgets/search_box.dart';
 import 'package:aplanet/src/widgets/square_image.dart';
-import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 num offsetToOpacity(
     {double currentOffset, double returnMax = 1, double maxOffset}) {
@@ -23,8 +25,23 @@ class _MainHomeState extends State<MainHome> with TickerProviderStateMixin {
   int _currentIndex = 0;
   PageController _pageController;
 
+  var animals = new List<Animal>();
+
+  getAnimal() {
+    API.getAnimals().then((res) {
+      print(res);
+      setState(() {
+        Iterable list = json.decode(res.body);
+        print(list);
+        animals = list.map((data) => Animal.fromJson(data)).toList();
+        print(animals.length);
+      });
+    }).catchError((onError) => print(onError.toString()));
+  }
+
   ScrollController scrollController;
   AnimationController controller;
+
   AnimationController opacityController;
   Animation<double> opacity;
 
@@ -46,6 +63,7 @@ class _MainHomeState extends State<MainHome> with TickerProviderStateMixin {
           maxOffset: scrollController.position.maxScrollExtent / 2);
     });
 
+    getAnimal();
     super.initState();
   }
 
@@ -76,15 +94,15 @@ class _MainHomeState extends State<MainHome> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Stack(
-          
-          children: [
-            HomeBackgroundColor(opacity),
-            SingleChildScrollView(
-              controller: scrollController,
-              child: Padding(
-                padding:
-                    const EdgeInsets.only(top: 40.0),
+        body: Container(
+          decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("assets/img/bg_t.jpg"), fit: BoxFit.cover)),
+          child: Stack(
+            children: [
+              HomeBackgroundColor(opacity),
+              Padding(
+                padding: const EdgeInsets.only(top: 60.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -108,13 +126,13 @@ class _MainHomeState extends State<MainHome> with TickerProviderStateMixin {
                             children: [
                               Text(
                                 "Aplanet",
-                                style:
-                                    TextStyle(fontSize: 25, color: Colors.white),
+                                style: TextStyle(
+                                    fontSize: 25, color: Colors.white),
                               ),
                               Text(
                                 "We love the planet",
-                                style:
-                                    TextStyle(fontSize: 10, color: Colors.white),
+                                style: TextStyle(
+                                    fontSize: 10, color: Colors.white),
                               )
                             ],
                           ),
@@ -143,17 +161,16 @@ class _MainHomeState extends State<MainHome> with TickerProviderStateMixin {
                     SizedBox(height: 20.0),
                     CategoryList(),
                     SizedBox(height: 20.0),
-                    HorizontalImages(),
-                     SizedBox(height: 20.0),
+                    Expanded(child: HorizontalImages(animals)),
+                    SizedBox(height: 20.0),
                     SquareImages(),
-                  
-                    
+
                     // ListView.builder(itemBuilder: null)
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         bottomNavigationBar: HomePageButtonNavigationBar(
           onTap: (index) {
