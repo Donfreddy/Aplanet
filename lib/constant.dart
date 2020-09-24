@@ -12,7 +12,10 @@ double screenWidth(context) {
 
 //--------------------------- Colors ----------------------------------
 
-// 124, 53, 33
+const Color whiteText = const Color(0xFFFFFFFF);
+//const Color brownText = const Color(0xffAA9171);
+const Color blackText = const Color(0xff4D4D4D);
+const Color orangeColor = const Color(0xFFCA5116);
 
 MaterialColor customRedColor = MaterialColor(0xFF7c3521, redColor);
 

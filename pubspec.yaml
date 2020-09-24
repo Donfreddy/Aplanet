@@ -38,6 +38,10 @@ dependencies:
   bottom_navy_bar: ^5.5.0
   google_fonts: ^1.1.0
   bouncing_widget: ^1.2.0
+  cached_network_image: ^2.3.2+1
+  shimmer: ^1.1.1
+  octo_image: ^0.3.0
+
 
 dev_dependencies:
   flutter_test:

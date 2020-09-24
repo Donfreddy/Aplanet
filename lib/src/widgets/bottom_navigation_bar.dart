@@ -1,3 +1,4 @@
+import 'package:aplanet/constant.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -11,32 +12,30 @@ class HomePageButtonNavigationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BottomNavyBar(
       itemCornerRadius: 10,
+      showElevation: true,
+      backgroundColor: Theme.of(context).primaryColor,
       selectedIndex: currentIndex,
       onItemSelected: onTap,
       items: [
         BottomNavyBarItem(
           icon: Icon(Icons.home),
           title: Text('Home'),
-          activeColor: Color(0xffc07d2a),
-          inactiveColor: Colors.grey,
+          activeColor: whiteText,
         ),
         BottomNavyBarItem(
           icon: Icon(Icons.date_range),
-          title: Text('Calandar'),
-          activeColor: Color(0xffc07d2a),
-          inactiveColor: Colors.grey,
+          title: Text('Calendar'),
+          activeColor: Colors.white,
         ),
         BottomNavyBarItem(
           icon: Icon(Icons.settings),
           title: Text('Settings'),
-          activeColor: Color(0xffc07d2a),
-          inactiveColor: Colors.grey,
+          activeColor: Colors.white,
         ),
         BottomNavyBarItem(
           icon: Icon(Icons.help),
           title: Text('Help'),
-          activeColor: Color(0xffc07d2a),
-          inactiveColor: Colors.grey,
+          activeColor: Colors.white,
         ),
       ],
     );

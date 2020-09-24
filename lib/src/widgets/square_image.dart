@@ -17,14 +17,14 @@ class _SquareImagesState extends State<SquareImages> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 150.0,
+      height: 140.0,
       child: ListView.builder(
         padding: EdgeInsets.only(left: 10.0),
         scrollDirection: Axis.horizontal,
         itemCount: _circularImages.length,
         itemBuilder: (BuildContext context, int index) {
           return Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(6.0),
             child: Column(
               children: <Widget>[
                 CircleAvatar(

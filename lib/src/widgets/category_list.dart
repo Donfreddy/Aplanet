@@ -1,3 +1,4 @@
+import 'package:aplanet/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -34,8 +35,7 @@ class _CategoryListState extends State<CategoryList> {
             alignment: Alignment.center,
             padding: EdgeInsets.symmetric(horizontal: 20.0),
             decoration: BoxDecoration(
-              color:
-                  index == selectedIndex ? Colors.orange : Colors.transparent,
+              color: index == selectedIndex ? orangeColor : Colors.transparent,
               borderRadius: BorderRadius.circular(6),
             ),
             child: Text(
