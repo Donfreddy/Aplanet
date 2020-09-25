@@ -1,6 +1,6 @@
 import 'package:aplanet/constant.dart';
-import 'package:aplanet/src/models/animal.dart';
 import 'package:aplanet/src/services/api.dart';
+import 'package:aplanet/src/views/animal_detail.dart';
 import 'package:aplanet/src/widgets/ShimmerList.dart';
 import 'package:aplanet/src/widgets/bottom_navigation_bar.dart';
 import 'package:aplanet/src/widgets/category_list.dart';
@@ -22,17 +22,11 @@ class MainHome extends StatefulWidget {
   _MainHomeState createState() => _MainHomeState();
 }
 
-class _MainHomeState extends State<MainHome> with TickerProviderStateMixin {
+class _MainHomeState extends State<MainHome> {
   ////////////////////////Variable
   int _currentIndex = 0;
   PageController _pageController;
 
-  var animals = new List<Animal>();
-
-  ScrollController scrollController;
-  AnimationController controller;
-  AnimationController opacityController;
-  Animation<double> opacity;
   API api = new API();
   Future animalsFuture;
 
@@ -51,51 +45,16 @@ class _MainHomeState extends State<MainHome> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    scrollController = ScrollController();
-    controller =
-        AnimationController(vsync: this, duration: Duration(seconds: 1))
-          ..forward();
-    opacityController =
-        AnimationController(vsync: this, duration: Duration(seconds: 5));
-    opacity = Tween(begin: 1.0, end: 0.0).animate(CurvedAnimation(
-      curve: Curves.linear,
-      parent: opacityController,
-    ));
-    scrollController.addListener(() {
-      opacityController.value = offsetToOpacity(
-          currentOffset: scrollController.offset,
-          maxOffset: scrollController.position.maxScrollExtent / 2);
-    });
-    animalsFuture = api.getAnimals();
 //    getAnimal();
     super.initState();
   }
 
   @override
   void dispose() {
-    controller.dispose();
-    scrollController.dispose();
-    opacityController.dispose();
     super.dispose();
   }
 
-//  void viewEventDetail() {
-//    Navigator.of(context).push(
-//      PageRouteBuilder(
-//        opaque: false,
-//        barrierDismissible: true,
-//        transitionDuration: Duration(milliseconds: 300),
-//        pageBuilder: (BuildContext context, animation, __) {
-//          return FadeTransition(
-//            opacity: animation,
-//            child: EventDetailPage(),
-//          );
-//        },
-//      ),
-//    );
-//  }
-
-  //////////////Screen
+  ////////////////////////Screen
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +66,7 @@ class _MainHomeState extends State<MainHome> with TickerProviderStateMixin {
                   image: AssetImage("assets/img/bg_t.jpg"), fit: BoxFit.cover)),
           child: Stack(
             children: [
-              HomeBackgroundColor(opacity),
+              Hero(tag: "bg", child: HomeBackgroundColor(1.8)),
               Padding(
                 padding: const EdgeInsets.only(top: 30.0),
                 child: Column(
@@ -134,14 +93,21 @@ class _MainHomeState extends State<MainHome> with TickerProviderStateMixin {
                           ),
                           Spacer(),
                           IconButton(
-                              icon: Icon(
-                                Icons.notifications,
-                                size: 30,
-                                color: Colors.white,
-                              ),
-                              onPressed: () {
-                                HapticFeedback.vibrate();
-                              }),
+                            icon: Icon(
+                              Icons.notifications,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              HapticFeedback.vibrate();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AnimalDetail(),
+                                ),
+                              );
+                            },
+                          ),
                         ],
                       ),
                     ),
@@ -161,28 +127,24 @@ class _MainHomeState extends State<MainHome> with TickerProviderStateMixin {
                         future: animalsFuture,
                         builder:
                             (BuildContext context, AsyncSnapshot snapshot) {
-                          if (snapshot.data == null) {
+                          if (!snapshot.hasData) {
                             return Expanded(child: ShimmerIvoiceList());
                           } else {
-                            if (snapshot.data.length <= 0) {
-                              return Column(
-                                children: [
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  Text("No Animal Available"),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                ],
-                              );
-                            } else {
-                              return Expanded(
-                                  child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount: snapshot.data.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return Container(
+                            return Expanded(
+                                child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => AnimalDetail(),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
                                     width: 180.0,
                                     margin:
                                         EdgeInsets.symmetric(horizontal: 10.0),
@@ -207,11 +169,11 @@ class _MainHomeState extends State<MainHome> with TickerProviderStateMixin {
                                             child: Align(
                                               alignment: Alignment.bottomCenter,
                                               child: AnimatedContainer(
-                                                  duration: const Duration(
-                                                      milliseconds: 100),
-                                                  height: 100.0,
-                                                  decoration: BoxDecoration(
-                                                      gradient: LinearGradient(
+                                                duration: const Duration(
+                                                    milliseconds: 100),
+                                                height: 100.0,
+                                                decoration: BoxDecoration(
+                                                  gradient: LinearGradient(
                                                     begin:
                                                         Alignment.bottomCenter,
                                                     end: Alignment(
@@ -226,7 +188,9 @@ class _MainHomeState extends State<MainHome> with TickerProviderStateMixin {
                                                       Colors.black
                                                           .withOpacity(0)
                                                     ],
-                                                  ))),
+                                                  ),
+                                                ),
+                                              ),
                                             ),
                                           ),
                                           Positioned(
@@ -280,10 +244,10 @@ class _MainHomeState extends State<MainHome> with TickerProviderStateMixin {
                                         ],
                                       ),
                                     ),
-                                  );
-                                },
-                              ));
-                            }
+                                  ),
+                                );
+                              },
+                            ));
                           }
                         }),
 //                    Expanded(child: HorizontalImages(animals)),

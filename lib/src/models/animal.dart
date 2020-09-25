@@ -52,7 +52,7 @@ class Animal {
         images = json['images'].cast<String>(),
         threatTitle = json['threat_title'],
         threatBody = json['threat_body'].cast<String>(),
-        sType = json['_type'];
+        sType = json['sType'];
 
   Map<String, dynamic> toJson() {
     return {
@@ -67,7 +67,7 @@ class Animal {
       'images': images,
       'threat_title': threatTitle,
       'threat_body': threatBody,
-      sType: sType
+      'sType': sType
     };
   }
 }

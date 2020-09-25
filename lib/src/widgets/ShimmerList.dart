@@ -2,14 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-///this class help us to generate a list of all the operation in one bill
-///@author Ndeme Yvan
-///@date 20/02/2020
-///Contributors : Ndeme yvan,
-///
 class ShimmerIvoiceList extends StatefulWidget {
-//  BuildContext context;
-//  ShimmerIvoiceList(this.context);
   @override
   __ShimmerIvoiceListState createState() => __ShimmerIvoiceListState();
 }
