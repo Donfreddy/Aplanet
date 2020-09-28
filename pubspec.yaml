@@ -41,6 +41,7 @@ dependencies:
   cached_network_image: ^2.3.2+1
   shimmer: ^1.1.1
   octo_image: ^0.3.0
+  carousel_slider: ^2.3.1
 
 
 dev_dependencies:

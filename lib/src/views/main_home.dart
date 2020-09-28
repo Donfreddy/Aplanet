@@ -2,20 +2,14 @@ import 'package:aplanet/constant.dart';
 import 'package:aplanet/src/services/api.dart';
 import 'package:aplanet/src/views/animal_detail.dart';
 import 'package:aplanet/src/widgets/ShimmerList.dart';
+import 'package:aplanet/src/widgets/animal_card.dart';
 import 'package:aplanet/src/widgets/bottom_navigation_bar.dart';
 import 'package:aplanet/src/widgets/category_list.dart';
 import 'package:aplanet/src/widgets/home_bg_color.dart';
 import 'package:aplanet/src/widgets/search_box.dart';
 import 'package:aplanet/src/widgets/square_image.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:octo_image/octo_image.dart';
-
-num offsetToOpacity(
-    {double currentOffset, double returnMax = 1, double maxOffset}) {
-  return (currentOffset * returnMax) / maxOffset;
-}
 
 class MainHome extends StatefulWidget {
   @override
@@ -45,6 +39,7 @@ class _MainHomeState extends State<MainHome> {
 
   @override
   void initState() {
+    animalsFuture = api.getAnimals();
 //    getAnimal();
     super.initState();
   }
@@ -59,14 +54,14 @@ class _MainHomeState extends State<MainHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: true,
+        resizeToAvoidBottomInset: false,
         body: Container(
           decoration: BoxDecoration(
               image: DecorationImage(
                   image: AssetImage("assets/img/bg_t.jpg"), fit: BoxFit.cover)),
           child: Stack(
             children: [
-              Hero(tag: "bg", child: HomeBackgroundColor(1.8)),
+              HomeBackgroundColor(1.8),
               Padding(
                 padding: const EdgeInsets.only(top: 30.0),
                 child: Column(
@@ -100,12 +95,6 @@ class _MainHomeState extends State<MainHome> {
                             ),
                             onPressed: () {
                               HapticFeedback.vibrate();
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => AnimalDetail(),
-                                ),
-                              );
                             },
                           ),
                         ],
@@ -127,126 +116,25 @@ class _MainHomeState extends State<MainHome> {
                         future: animalsFuture,
                         builder:
                             (BuildContext context, AsyncSnapshot snapshot) {
-                          if (!snapshot.hasData) {
+                          if (snapshot.data == null) {
                             return Expanded(child: ShimmerIvoiceList());
                           } else {
                             return Expanded(
-                                child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: snapshot.data.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => AnimalDetail(),
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    width: 180.0,
-                                    margin:
-                                        EdgeInsets.symmetric(horizontal: 10.0),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                      child: Stack(
-                                        fit: StackFit.expand,
-                                        children: [
-                                          OctoImage(
-                                            image: CachedNetworkImageProvider(
-                                                '${snapshot.data[index]["images"][1]}'),
-                                            placeholderBuilder:
-                                                OctoPlaceholder.blurHash(
-                                              'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
-                                            ),
-                                            errorBuilder: OctoError.icon(
-                                                color: Colors.red),
-                                            fit: BoxFit.cover,
-                                          ),
-                                          Positioned(
-                                            //bottom: 0.0,
-                                            child: Align(
-                                              alignment: Alignment.bottomCenter,
-                                              child: AnimatedContainer(
-                                                duration: const Duration(
-                                                    milliseconds: 100),
-                                                height: 100.0,
-                                                decoration: BoxDecoration(
-                                                  gradient: LinearGradient(
-                                                    begin:
-                                                        Alignment.bottomCenter,
-                                                    end: Alignment(
-                                                        Alignment
-                                                            .bottomCenter.x,
-                                                        1 -
-                                                            Alignment
-                                                                .bottomCenter
-                                                                .y),
-                                                    colors: [
-                                                      Colors.black,
-                                                      Colors.black
-                                                          .withOpacity(0)
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Positioned(
-                                            bottom: 6.0,
-                                            left: 10,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Container(
-                                                  width: 170.0,
-                                                  child: Text(
-                                                    snapshot.data[index]
-                                                            ['name'] ??
-                                                        "N/A",
-                                                    style: TextStyle(
-                                                        fontSize: 16,
-                                                        color: whiteText),
-                                                    maxLines: 1,
-                                                    softWrap: false,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                                Container(
-                                                  width: 150.0,
-                                                  child: Text(
-                                                    snapshot.data[index]
-                                                            ["sciName"] ??
-                                                        "N/A",
-                                                    style: TextStyle(
-                                                        color: orangeColor,
-                                                        fontSize: 10.0),
-                                                    maxLines: 1,
-                                                    softWrap: false,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-//                  Positioned(
-//                    right: 12.0,
-//                    child: Container(
-//                        width: 20.0,
-//                        child: CircleAvatar(
-//                          backgroundColor: Colors.red.withOpacity(0.8),
-//                        )),
-//                  ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
+                                child: Container(
+                              height: 250.0,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: snapshot.data.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return AnimalCard(snapshot.data, index, () {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return AnimalDetail(
+                                          snapshot.data[index], index);
+                                    }));
+                                  });
+                                },
+                              ),
                             ));
                           }
                         }),
